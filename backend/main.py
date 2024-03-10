@@ -1,28 +1,34 @@
-from flask import Flask, Response, request
+import time
+from flask import Flask, Response, json, request
 
 app = Flask(__name__)
 
 
-def data(msg):
-    i = 0
+messages = []
+
+
+def data():
+    lastLen = len(messages)
+    for msg in messages:
+        yield f"{msg}\n\n"
     while True:
-        if msg:
-            yield f"data: {msg}\n\n"
-        else:
-            yield f"data: {i}\n\n"
-        i += 1
-        print(msg)
+        while lastLen == len(messages):
+            time.sleep(0.01)
+        yield f"{messages[-1]}\n\n"
+        lastLen = len(messages)
 
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    msg = ""
-    if request.method == "POST":
-        message = request.get_json()
-        msg = message["message"]
-    if request.method == "GET":
-        return Response(data(msg), mimetype="text/event-stream")
-    return "Helo World"
+@app.route("/msg", methods=["GET"])
+def msg():
+    return Response(data(), mimetype="text/event-stream")
 
 
-app.run(debug=True)
+@app.route("/post", methods=["POST"])
+def post():
+    print(request.json)
+    message = request.json
+    messages.append(message)
+    return Response(json.dumps(message))
+
+
+app.run()
