@@ -15,7 +15,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let res = await (
+    await (
       await fetch("http://localhost:5000/post", {
         method: "POST",
         headers: {
@@ -27,8 +27,6 @@ function App() {
         }),
       })
     ).json();
-
-    console.log(res);
   };
   return (
     <>
