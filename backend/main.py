@@ -1,9 +1,7 @@
-import time
 from flask import Flask, Response, json, request
-from flask_cors import CORS
+import time
 
 app = Flask(__name__)
-CORS(app)
 
 messages = []
 
@@ -21,7 +19,11 @@ def data():
 
 @app.route("/msg", methods=["GET"])
 def msg():
-    return Response(data(), mimetype="text/event-stream")
+    return Response(
+        data(),
+        mimetype="text/event-stream",
+        headers={"Access-Control-Allow-Origin": "*"},
+    )
 
 
 @app.route("/post", methods=["POST"])
@@ -29,7 +31,7 @@ def post():
     print(request.json)
     message = request.json
     messages.append(message)
-    return Response(json.dumps(message))
+    return Response(json.dumps(message), headers={"Access-Control-Allow-Origin": "*"})
 
 
-app.run()
+app.run(debug=True)
