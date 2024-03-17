@@ -6,11 +6,11 @@ function App() {
   const [name, setName] = useState("");
   const [data, setData] = useState([]);
 
-  // const sse = new EventSource("http://localhost:5000/msg");
-  // sse.onmessage = (e) => {
-  //   console.log(e);
-  //   setData([...data, e.data]);
-  // };
+  const sse = new EventSource("http://localhost:5000/msg");
+  sse.onmessage = (e) => {
+    console.log(e);
+    setData([...data, JSON.parse(e.data)]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +28,18 @@ function App() {
       })
     ).json();
   };
+
   return (
     <>
-      <div className="chat">{data}</div>
+      <div className="chat">
+        {data.map((msg, k) => (
+          <div key={k}>
+            <p>
+              <b>{msg.author}</b>: {msg.message}
+            </p>
+          </div>
+        ))}
+      </div>
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"

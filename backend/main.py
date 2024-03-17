@@ -1,7 +1,9 @@
 from flask import Flask, Response, json, request
+from flask_cors import CORS
 import time
 
 app = Flask(__name__)
+CORS(app)
 
 messages = []
 
@@ -9,29 +11,25 @@ messages = []
 def data():
     lastLen = len(messages)
     for msg in messages:
-        yield f"{msg}\n\n"
+        yield f"data: {msg}\n\n"
     while True:
         while lastLen == len(messages):
             time.sleep(0.01)
-        yield f"{messages[-1]}\n\n"
+        yield f"data: {messages[-1]}\n\n"
         lastLen = len(messages)
 
 
 @app.route("/msg", methods=["GET"])
 def msg():
-    return Response(
-        data(),
-        mimetype="text/event-stream",
-        headers={"Access-Control-Allow-Origin": "*"},
-    )
+    return Response(data(), mimetype="text/event-stream")
 
 
 @app.route("/post", methods=["POST"])
 def post():
-    print(request.json)
     message = request.json
-    messages.append(message)
-    return Response(json.dumps(message), headers={"Access-Control-Allow-Origin": "*"})
+    messages.append(json.dumps(message))
+    res = Response(json.dumps(message))
+    return res
 
 
 app.run(debug=True)
