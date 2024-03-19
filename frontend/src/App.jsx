@@ -6,11 +6,13 @@ function App() {
   const [name, setName] = useState("");
   const [data, setData] = useState([]);
 
-  const sse = new EventSource("http://localhost:5000/msg");
-  sse.onmessage = (e) => {
-    console.log(e);
-    setData([...data, JSON.parse(e.data)]);
-  };
+  useEffect(() => {
+    const sse = new EventSource("http://localhost:5000/msg");
+    sse.onmessage = (e) => {
+      console.log(e);
+      setData([...data, JSON.parse(e.data)]);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

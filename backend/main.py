@@ -1,11 +1,17 @@
 from flask import Flask, Response, json, request
-from flask_cors import CORS
 import time
 
 app = Flask(__name__)
-CORS(app)
 
 messages = []
+
+
+def make_response(data, mimetype=None):
+    if type(data) != str and type(data) in [int, dict, set, bool]:
+        data = json.dumps(data)
+    resp = Response(data, mimetype=mimetype)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
 
 
 def data():
@@ -21,15 +27,24 @@ def data():
 
 @app.route("/msg", methods=["GET"])
 def msg():
-    return Response(data(), mimetype="text/event-stream")
+    return make_response(data(), mimetype="text/event-stream")
 
 
-@app.route("/post", methods=["POST"])
+@app.route("/post", methods=["POST", "OPTIONS"])
 def post():
-    message = request.json
+    global messages
+    print("hi")
+    try:
+        message = request.json
+    except:
+        import traceback
+
+        traceback.print_exc()
+        return make_response("")
+    print("Helo")
     messages.append(json.dumps(message))
-    res = Response(json.dumps(message))
-    return res
+    print("Helo World")
+    return make_response(message)
 
 
 app.run(debug=True)
