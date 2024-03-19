@@ -11,12 +11,17 @@ def make_response(data, mimetype=None):
         data = json.dumps(data)
     resp = Response(data, mimetype=mimetype)
     resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Origin"]= "*"
+    resp.headers["Access-Control-Allow-Credentials"]= "true"
+    resp.headers["Access-Control-Allow-Methods"]= "GET,HEAD,OPTIONS,POST,PUT"
+    resp.headers["Access-Control-Allow-Headers"]= "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
     return resp
 
 
 def data():
     lastLen = len(messages)
     for msg in messages:
+        print(msg)
         yield f"data: {msg}\n\n"
     while True:
         while lastLen == len(messages):
@@ -33,17 +38,12 @@ def msg():
 @app.route("/post", methods=["POST", "OPTIONS"])
 def post():
     global messages
-    print("hi")
     try:
         message = request.json
     except:
-        import traceback
-
-        traceback.print_exc()
-        return make_response("")
-    print("Helo")
+        return make_response(False)
     messages.append(json.dumps(message))
-    print("Helo World")
+    messages=list(set(messages))
     return make_response(message)
 
 

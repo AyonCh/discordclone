@@ -1,46 +1,44 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import axios from "axios"
 
 function App() {
   const [input, setInput] = useState("");
   const [name, setName] = useState("");
   const [data, setData] = useState([]);
 
+    var sse;
+
   useEffect(() => {
-    const sse = new EventSource("http://localhost:5000/msg");
+    sse = new EventSource("http://localhost:5000/msg");
     sse.onmessage = (e) => {
-      console.log(e);
-      setData([...data, JSON.parse(e.data)]);
-    };
+        console.log(e.data);
+        console.log([...data, JSON.parse(e.data)])
+        setData(data => [...data, JSON.parse(e.data)]);
+      };
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    await (
-      await fetch("http://localhost:5000/post", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: input,
-          author: name,
-        }),
+    axios.post("http://localhost:5000/post", {
+        message: input,
+        author: name,
       })
-    ).json();
   };
 
   return (
     <>
       <div className="chat">
-        {data.map((msg, k) => (
-          <div key={k}>
-            <p>
-              <b>{msg.author}</b>: {msg.message}
-            </p>
-          </div>
-        ))}
+        {data.map((msg, k) => {
+            console.log("Good morning", msg)
+            return (
+            <div key={k}>
+                <p>
+                <b>{msg.author}</b>: {msg.message}
+                </p>
+            </div>
+          )
+        })}
       </div>
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
