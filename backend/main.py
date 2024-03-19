@@ -11,17 +11,18 @@ def make_response(data, mimetype=None):
         data = json.dumps(data)
     resp = Response(data, mimetype=mimetype)
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    resp.headers["Access-Control-Allow-Origin"]= "*"
-    resp.headers["Access-Control-Allow-Credentials"]= "true"
-    resp.headers["Access-Control-Allow-Methods"]= "GET,HEAD,OPTIONS,POST,PUT"
-    resp.headers["Access-Control-Allow-Headers"]= "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp.headers["Access-Control-Allow-Credentials"] = "true"
+    resp.headers["Access-Control-Allow-Methods"] = "GET,HEAD,OPTIONS,POST,PUT"
+    resp.headers["Access-Control-Allow-Headers"] = (
+        "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+    )
     return resp
 
 
 def data():
     lastLen = len(messages)
     for msg in messages:
-        print(msg)
         yield f"data: {msg}\n\n"
     while True:
         while lastLen == len(messages):
@@ -43,7 +44,7 @@ def post():
     except:
         return make_response(False)
     messages.append(json.dumps(message))
-    messages=list(set(messages))
+    messages = list(set(messages))
     return make_response(message)
 
 
