@@ -1,14 +1,23 @@
+from os import walk
 from flask import Flask, Response, json, request
 import time
+from sqlite3 import connect
 
 app = Flask(__name__)
 
-messages = []
+connection = connect("db/database.db", check_same_thread=False)
+cursor = connection.cursor()
+
+cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time)")
+messages = list(
+    map(
+        lambda x: f"""{{"message": "{x[0]}", "author": "{x[1]}", "time": "{x[2]}"}}""",
+        list(cursor.execute("SELECT * FROM messages")),
+    )
+)
 
 
 def make_response(data, mimetype=None):
-    if type(data) != str and type(data) in [int, dict, set, bool]:
-        data = json.dumps(data)
     resp = Response(data, mimetype=mimetype)
     resp.headers["Access-Control-Allow-Origin"] = "*"
     resp.headers["Access-Control-Allow-Origin"] = "*"
@@ -43,8 +52,11 @@ def post():
         message = request.json
     except:
         return make_response(False)
+    cursor = connection.cursor()
+    values = ",".join(['"' + x + '"' for x in list(message.values())])
+    cursor.execute(f"INSERT INTO messages VALUES ({values})")
+    connection.commit()
     messages.append(json.dumps(message))
-    messages = list(set(messages))
     return make_response(message)
 
 

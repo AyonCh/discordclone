@@ -1,0 +1,28 @@
+.page {
+  display: flex;
+  height: 100vh;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  background: #1e2124;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.links>* {
+  color: white;
+  text-decoration: none;
+}
+
+.links>*:hover {
+  font-weight: 700;
+}
+
+.content {
+  background: #424549;
+  width: 100vw;
+}

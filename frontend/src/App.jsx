@@ -1,52 +1,28 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
+import { Route, Routes } from "react-router-dom";
+import { Home } from "./pages/Home";
+
+let logged = false;
 
 function App() {
-  const [input, setInput] = useState("");
-  const [name, setName] = useState("");
-  const [data, setData] = useState([]);
-
-  var sse;
-
-  useEffect(() => {
-    sse = new EventSource("http://localhost:5000/msg");
-    sse.onmessage = (e) => {
-      console.log(e.data);
-      console.log([...data, JSON.parse(e.data)]);
-      setData((data) => [...data, JSON.parse(e.data)]);
-    };
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    axios.post("http://localhost:5000/post", {
-      message: input,
-      author: name,
-    });
-    setInput("");
-  };
-
+  if (!logged) {
+    return <></>;
+  }
   return (
-    <>
-      <div className="chat">
-        {data.map((msg, k) => (
-          <div key={k}>
-            <p>
-              <b>{msg.author}</b>: {msg.message}
-            </p>
-          </div>
-        ))}
+    <div className="page">
+      <div className="links">
+        <a href="/">Home</a>
+        <a href="/1">Some</a>
       </div>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input
-          type="text"
-          placeholder="message"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </form>
-    </>
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/:id" element={<Home />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
