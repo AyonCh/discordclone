@@ -7,9 +7,9 @@ import { Home } from "./pages/Home";
 let logged = false;
 
 function App() {
-  if (!logged) {
-    return <></>;
-  }
+  // if (!logged) {
+  //   return <></>;
+  // }
   return (
     <div className="page">
       <div className="links">

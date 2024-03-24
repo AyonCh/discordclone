@@ -6,23 +6,118 @@
 .links {
   display: flex;
   flex-direction: column;
-  background: #1e2124;
-  padding: 12px;
+  background: #1e1f22;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  width: 6vw;
 }
 
 .links>* {
   color: white;
   text-decoration: none;
+  padding: 15px 3vw;
 }
 
 .links>*:hover {
-  font-weight: 700;
+  background: #24282c;
 }
 
 .content {
-  background: #424549;
+  background: #313338;
   width: 100vw;
+}
+
+.input {
+  background: #383a40;
+  padding: 15px;
+  border-radius: 10px;
+  margin-inline: 15px;
+  align-content: center;
+  display: flex;
+  align-items: center;
+  align-self: center;
+}
+
+.input>* {
+  background: inherit;
+  border: none;
+  outline: none;
+  color: white;
+}
+
+.input input::placeholder {
+  color: #6d6f78;
+}
+
+.input input {
+  width: 100%;
+  height: 100%;
+}
+
+.chat {
+  overflow-y: scroll;
+  height: 82vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.message:hover {
+  background: #2e3035;
+}
+
+.message>.text>.time {
+  opacity: 0;
+  color: #949ba4;
+  font-size: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.message:hover>.text>.time {
+  opacity: 1;
+}
+
+.title {
+  font-weight: 500;
+  margin-left: 30px;
+}
+
+.text {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+nav {
+  background: #313338;
+  padding: 15px;
+  align-content: center;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  box-shadow: 0px 1px 1px #25272b;
+  color: white;
+  font-weight: 500;
+}
+
+.imagine {
+  font-size: 100px;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+}
+
+.imgine {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
 }

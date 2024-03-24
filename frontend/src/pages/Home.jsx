@@ -24,7 +24,7 @@ export const Home = () => {
     e.preventDefault();
     console.log(input);
     axios.post("http://localhost:5000/post", {
-      message: input,
+      message: input.trim(),
       author: name,
       time: new Date().toLocaleTimeString().slice(0, 5),
     });
@@ -33,23 +33,41 @@ export const Home = () => {
 
   const { id } = useParams();
   if (!id) {
-    return <>NO</>;
+    return (
+      <div className="imgine">
+        <div className="imagine">Imaging having friends</div>;
+      </div>
+    );
   }
   return (
-    <div>
+    <>
+      <nav>Some</nav>
       <div className="chat">
         {data.map((msg, k) => (
-          <div key={k}>
-            <p>
-              <b>
-                {msg.time} {msg.author}
-              </b>
-              : {msg.message}
-            </p>
+          <div className="message" key={k}>
+            {k > 0 ? (
+              data[k - 1].author == msg.author ? (
+                <></>
+              ) : (
+                <div className="title">{msg.author}</div>
+              )
+            ) : (
+              <div className="title">{msg.author}</div>
+            )}
+            <div className="text">
+              <div className="time">{msg.time}</div>
+              <div className="msg">{msg.message}</div>
+            </div>
           </div>
         ))}
       </div>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <input
+        type="text"
+        placeholder="username"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <form className="input" onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"
           placeholder="message"
@@ -57,12 +75,6 @@ export const Home = () => {
           onChange={(e) => setInput(e.target.value)}
         />
       </form>
-      <input
-        type="text"
-        placeholder="username"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-    </div>
+    </>
   );
 };
