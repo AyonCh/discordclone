@@ -8,13 +8,19 @@ app = Flask(__name__)
 connection = connect("db/database.db", check_same_thread=False)
 cursor = connection.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time, server)")
+cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time)")
+# cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time, server)")
 cursor.execute(
     "CREATE TABLE IF NOT EXISTS users(username PRIMARY KEY, email PRIMARY KEY, password)"
 )
-cursor.execute(
-    "CREATE TABLE IF NOT EXISTS servers(id INTEGER PRIMARY KEY, name, members)"
-)
+# cursor.execute(
+#     "CREATE TABLE IF NOT EXISTS servers(id INTEGER PRIMARY KEY, name, members)"
+# )
+
+# When searching for the list of members, fetch the server from the sql database, parse the members column into a list and start fetching the data of the all the members using a for loop
+# for member in members:
+#   cursor.execute(f"SELECT * FROM users WHERE username={member}")
+
 messages = list(
     map(
         lambda x: f"""{{"message": "{x[0]}", "author": "{x[1]}", "time": "{x[2]}"}}""",
