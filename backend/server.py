@@ -30,7 +30,7 @@ def data(id):
             if last_len[x] == len(update[x]):
                 pass
             else:
-                if id == users[x]:
+                if id in users[x]:
                     yield f"data: {update[x][-1]}\n\n"
                     last_len[x] = len(update[x])
                 else:
@@ -73,8 +73,8 @@ def post():
     if not message:
         return make_response(False)
 
-    update[message["db"]] = []
-    users[message["db"]] = message["on"]
+    update[message["db"]] = [*update[message["db"]]]
+    users[message["db"]] = [*users[message["db"], message["on"]]]
     return make_response(json.dumps(message))
 
 
