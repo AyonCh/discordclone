@@ -7,11 +7,10 @@ export const Home = () => {
   const [input, setInput] = useState("");
   const [name, setName] = useState("");
   const [data, setData] = useState([]);
-
-  let sse;
+  const { id } = useParams();
 
   useEffect(() => {
-    sse = new EventSource("http://localhost:5000/msg");
+    let sse = new EventSource("http://localhost:5000/msg");
     sse.onmessage = (e) => {
       setData((data) => [...data, JSON.parse(e.data)]);
     };
@@ -19,6 +18,22 @@ export const Home = () => {
       setData([]);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(data);
+    if (data.length > 0) {
+      let message = document.getElementById(String(data.length - 1));
+      message.scrollIntoView();
+    }
+  }, [data]);
+
+  if (!id) {
+    return (
+      <div className="imgine">
+        <div className="imagine">Imaging having friends</div>;
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,20 +46,12 @@ export const Home = () => {
     setInput("");
   };
 
-  const { id } = useParams();
-  if (!id) {
-    return (
-      <div className="imgine">
-        <div className="imagine">Imaging having friends</div>;
-      </div>
-    );
-  }
   return (
     <>
       <nav>Some</nav>
       <div className="chat">
         {data.map((msg, k) => (
-          <div className="message" key={k}>
+          <div className="message" key={k} id={k}>
             {k > 0 ? (
               data[k - 1].author == msg.author ? (
                 <></>
@@ -56,7 +63,15 @@ export const Home = () => {
             )}
             <div className="text">
               <div className="time">{msg.time}</div>
-              <div className="msg">{msg.message}</div>
+              <div className="msg">
+                {msg.message.startsWith("https") ? (
+                  <a href={msg.message} target="_blank">
+                    {msg.message}
+                  </a>
+                ) : (
+                  <>{msg.message}</>
+                )}
+              </div>
             </div>
           </div>
         ))}

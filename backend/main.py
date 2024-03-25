@@ -11,7 +11,7 @@ cursor = connection.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time)")
 # cursor.execute("CREATE TABLE IF NOT EXISTS messages(message, author, time, server)")
 cursor.execute(
-    "CREATE TABLE IF NOT EXISTS users(username PRIMARY KEY, email PRIMARY KEY, password)"
+    "CREATE TABLE IF NOT EXISTS users(username, email, password, PRIMARY KEY(username, email))"
 )
 # cursor.execute(
 #     "CREATE TABLE IF NOT EXISTS servers(id INTEGER PRIMARY KEY, name, members)"
