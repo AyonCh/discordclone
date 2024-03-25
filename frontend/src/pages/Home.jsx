@@ -10,18 +10,19 @@ export const Home = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    let sse = new EventSource("http://localhost:5000/msg");
-    sse.onmessage = (e) => {
-      setData((data) => [...data, JSON.parse(e.data)]);
-    };
-    sse.onopen = () => {
-      setData([]);
-    };
+    if (id) {
+      let sse = new EventSource("http://localhost:5000/msg");
+      sse.onmessage = (e) => {
+        setData((data) => [...data, JSON.parse(e.data)]);
+      };
+      sse.onopen = () => {
+        setData([]);
+      };
+    }
   }, []);
 
   useEffect(() => {
-    console.log(data);
-    if (data.length > 0) {
+    if ((data.length > 0) & id) {
       let message = document.getElementById(String(data.length - 1));
       message.scrollIntoView();
     }
