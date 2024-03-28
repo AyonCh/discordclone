@@ -5,6 +5,8 @@ app = Flask(__name__)
 
 
 def make_response(data, mimetype=None, status=None):
+    if type(data) in [str, int, float, bool, list, dict]:
+        data = json.dumps(data)
     resp = Response(data, mimetype=mimetype, status=status)
     resp.headers["Access-Control-Allow-Origin"] = "*"
     resp.headers["Access-Control-Allow-Origin"] = "*"
@@ -51,14 +53,15 @@ def id(id):
 def updt(id):
     global update
     try:
-        message = request.json
+        message = dict(request.args)
     except:
         return make_response(False)
 
     if not message:
         return make_response(False)
+
     update[id].append(message["msg"])
-    return make_response(json.dumps(message))
+    return make_response(message)
 
 
 @app.route("/", methods=["POST", "OPTIONS"])
@@ -66,16 +69,22 @@ def post():
     global update
     global users
     try:
-        message = request.json
+        message = dict(request.args)
     except:
+        print("hi")
         return make_response(False)
 
     if not message:
         return make_response(False)
 
+    print(message)
+    if message["db"] not in update:
+        update[message["db"]] = []
     update[message["db"]] = [*update[message["db"]]]
-    users[message["db"]] = [*users[message["db"], message["on"]]]
-    return make_response(json.dumps(message))
+    if message["db"] not in users:
+        users[message["db"]] = []
+    users[message["db"]] = users[message["db"]] + [message["on"]]
+    return make_response(message)
 
 
 app.run(debug=True)
